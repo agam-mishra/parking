@@ -13,8 +13,10 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
-      // The demo ships a large WebAssembly database; skip the offline service worker there.
-      !demo && VitePWA({
+      // The demo ships a large WebAssembly database, so it gets no offline cache; its
+      // self-destroying worker removes one left behind by an earlier non-demo deploy.
+      VitePWA({
+        selfDestroying: demo,
         registerType: 'autoUpdate',
         manifest: {
           name: 'Parking',
