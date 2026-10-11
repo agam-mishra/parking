@@ -13,8 +13,11 @@ const LABELS: Record<string, [string, string, string]> = {
 export function DemoPanel({ onPick }: { onPick: (phone: string, pin: string) => void }) {
   const { lang } = useT()
   const [ready, setReady] = useState(false)
+  const [failed, setFailed] = useState(false)
   const [resetting, setResetting] = useState(false)
-  useEffect(() => { getDb().then(() => setReady(true)) }, [])
+  useEffect(() => {
+    getDb().then(() => setReady(true), (e) => { console.error('Demo database failed to start', e); setFailed(true) })
+  }, [])
 
   async function reset() {
     if (!window.confirm(lang === 'hi' ? 'डेमो का सारा डेटा शुरू से बनेगा। ठीक है?' : 'Reset all demo data to the start?')) return
@@ -29,7 +32,7 @@ export function DemoPanel({ onPick }: { onPick: (phone: string, pin: string) => 
       <div className="flex items-center justify-between">
         <span className="rounded bg-amber-400 px-2 py-0.5 text-sm font-extrabold text-slate-900">DEMO</span>
         <span className="text-sm text-slate-600">
-          {!ready ? (lang === 'hi' ? '⏳ डेमो तैयार हो रहा है...' : '⏳ Preparing demo...') : (lang === 'hi' ? 'एक बटन दबाकर लॉगिन करें' : 'Tap to log in')}
+          {failed ? (lang === 'hi' ? '⚠️ डेमो शुरू नहीं हो सका' : '⚠️ Demo failed to start') : !ready ? (lang === 'hi' ? '⏳ डेमो तैयार हो रहा है...' : '⏳ Preparing demo...') : (lang === 'hi' ? 'एक बटन दबाकर लॉगिन करें' : 'Tap to log in')}
         </span>
       </div>
       <div className="grid grid-cols-3 gap-2">

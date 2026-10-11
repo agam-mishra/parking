@@ -5,7 +5,7 @@ import { DEMO_SEED } from './seed'
 // Demo mode: a real Postgres (PGlite, WebAssembly) inside the browser, running the same
 // migrations as Supabase. Each visitor gets their own copy, saved in IndexedDB.
 
-const migrations = import.meta.glob('../../../supabase/migrations/*.sql', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
+const migrations = import.meta.glob('./migrations/*.sql', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
 
 // Bump to force every visitor's demo database to be rebuilt.
 const DB_VERSION = `v1-${Object.keys(migrations).length}`
